@@ -78,6 +78,7 @@ class ClubReady_Schedule {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->define_cron_hooks();
 
 	}
 
@@ -121,6 +122,12 @@ class ClubReady_Schedule {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-clubready-schedule-public.php';
+
+		/**
+		 * The cron task functionality of the plugin, which pulls data in from the
+		 * ClubReady API to store in database.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'cron/class-clubready-schedule-cron.php';
 
 		$this->loader = new ClubReady_Schedule_Loader();
 
@@ -174,6 +181,21 @@ class ClubReady_Schedule {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}
+
+	/**
+	 * Register all of the hooks related to the cron functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_cron_hooks() {
+
+		$plugin_cron = new ClubReady_Schedule_Cron( $this->get_plugin_name(), $this->get_version() );
+
+		$this->loader->add_filter( 'cron-schedules', $plugin_cron, 'add_cron_tasks' );
+	}
+
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
