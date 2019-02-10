@@ -40,6 +40,8 @@ class ClubReady_Schedule_Admin {
 	 */
 	private $version;
 
+	private $views;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -98,6 +100,72 @@ class ClubReady_Schedule_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/clubready-schedule-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	public function admin_main() {
+		echo "Main";
+	}
+
+	public function admin_settings() {
+		$file = plugin_dir_path( __FILE__ ) . 'partials/clubready-schedule-admin-api-settings.php';
+
+		if( file_exists($file) ){
+			require_once( $file );
+		}
+	}
+
+	public function update_api_settings() {
+		register_setting( 'api_settings', 'api_key' );
+		register_setting( 'api_settings', 'chain_id' );
+	}
+
+	public function add_to_menu() {
+		add_menu_page(
+			$page_title = 'ClubReady Schedule by Saltbox',
+			$menu_title = 'CR Schedule',
+			$capability = 'manage_options',
+			$menu_slug = urlencode( $this->plugin_name ),
+			$function = array( $this, 'admin_main'),
+			$icon_url = 'dashicons-calendar'
+		);
+
+		add_submenu_page(
+			$parent_slug = urlencode( $this->plugin_name ),
+			$page_title = 'Locations',
+			$menu_title = 'Locations',
+			$capability = 'manage_options',
+			$menu_slug = 'locations',
+			$function = array( $this, 'admin_settings')
+		);
+
+		add_submenu_page(
+			$parent_slug = urlencode( $this->plugin_name ),
+			$page_title = 'Classes',
+			$menu_title = 'Classes',
+			$capability = 'manage_options',
+			$menu_slug = 'classes',
+			$function = array( $this, 'admin_settings')
+		);
+
+		add_submenu_page(
+			$parent_slug = urlencode( $this->plugin_name ),
+			$page_title = 'Instructors',
+			$menu_title = 'Instructors',
+			$capability = 'manage_options',
+			$menu_slug = 'instructors',
+			$function = array( $this, 'admin_settings')
+		);
+
+		add_submenu_page(
+			$parent_slug = urlencode( $this->plugin_name ),
+			$page_title = 'Settings',
+			$menu_title = 'Settings',
+			$capability = 'manage_options',
+			$menu_slug = 'settings',
+			$function = array( $this, 'admin_settings')
+		);
+
+		add_action( 'admin_init', array( $this, 'update_api_settings' ) );
 	}
 
 }

@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       ClubReady Schedule
  * Plugin URI:        http://example.com/plugin-name-uri/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       This is a plugin that provides a shortcode to embed a ClubReady class schedule on your site.
  * Version:           1.0.0
  * Author:            Saltbox
  * Author URI:        https://saltbox.solutions/
