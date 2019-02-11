@@ -79,6 +79,7 @@ class ClubReady_Schedule {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 		$this->define_cron_hooks();
+		$this->define_shortcode_hooks();
 
 	}
 
@@ -124,10 +125,14 @@ class ClubReady_Schedule {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-clubready-schedule-public.php';
 
 		/**
-		 * The cron task functionality of the plugin, which pulls data in from the
-		 * ClubReady API to store in database.
+		 * The class responsible for defining all cron intervals and scheduled tasks.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'cron/class-clubready-schedule-cron.php';
+
+		/**
+		 * The class responsible for defining all shortcodes.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'shortcode/class-clubready-schedule-shortcode.php';
 
 		$this->loader = new ClubReady_Schedule_Loader();
 
@@ -196,6 +201,21 @@ class ClubReady_Schedule {
 		$this->loader->add_action( 'clubready_schedule_cron_hook', $plugin_cron, 'cron_tasks' );
 
 		$this->loader->add_filter( 'cron_schedules', $plugin_cron, 'add_cron_intervals' );
+
+	}
+
+	/**
+	 * Register all of the hooks related to the shortcode functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_shortcode_hooks() {
+
+		$plugin_shortcode = new ClubReady_Schedule_Shortcode( $this->get_plugin_name(), $this->get_version() );
+
+		$this->loader->add_action( 'init', $plugin_shortcode, 'register_shortcodes' );
 
 	}
 
