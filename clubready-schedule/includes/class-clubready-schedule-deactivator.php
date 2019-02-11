@@ -31,6 +31,9 @@ class ClubReady_Schedule_Deactivator {
 	 */
 	public static function deactivate() {
 
+		// TODO: Refactor into deactivate cron method
+		$timestamp = wp_next_scheduled( 'clubready_schedule_cron_hook' );
+		wp_unschedule_event( $timestamp, 'clubready_schedule_cron_hook' );
 	}
 
 }

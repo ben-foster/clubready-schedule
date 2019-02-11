@@ -53,8 +53,41 @@ class ClubReady_Schedule_Cron {
 
 	}
 
-	public function add_cron_tasks() {
+	public function add_cron_intervals( $schedules ) {
+		$schedules['fifteen_minutes'] = array(
+			'interval' => 900,
+			'display'  => esc_html__( 'Every Fifteen Minutes' ),
+		);
 
+		return $schedules;
 	}
 
+	public function cron_tasks() {
+		self::update_locations();
+	}
+
+	// TODO: refactor to somewhere else because this function could be manually called if the user wanted to manually update
+	private static function update_locations() {
+		$get_locations_url = "https://www.clubready.com/api/current/corp/" . get_option( 'chain_id' ) . "/clubs?ApiKey=" . get_option( 'api_key' );
+
+		$result = self::curl( $get_locations_url );
+
+		$location_arr = json_decode( $result, true );
+
+		foreach ( $location_arr as $location ){
+			// error_log ( implode( "|", $location ) );
+		}
+	}
+
+	// TODO: refactor into static helper class
+	private static function curl( $url ){
+		$curl = curl_init();
+		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt( $curl, CURLOPT_URL, $url );
+
+		$result = curl_exec( $curl );
+		curl_close( $curl );
+
+		return $result;
+	}
 }

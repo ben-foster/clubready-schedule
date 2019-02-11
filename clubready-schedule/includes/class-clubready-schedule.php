@@ -193,7 +193,10 @@ class ClubReady_Schedule {
 
 		$plugin_cron = new ClubReady_Schedule_Cron( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_filter( 'cron-schedules', $plugin_cron, 'add_cron_tasks' );
+		$this->loader->add_action( 'clubready_schedule_cron_hook', $plugin_cron, 'cron_tasks' );
+
+		$this->loader->add_filter( 'cron_schedules', $plugin_cron, 'add_cron_intervals' );
+
 	}
 
 

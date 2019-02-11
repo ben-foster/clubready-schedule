@@ -30,7 +30,13 @@ class ClubReady_Schedule_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'database/class-clubready-schedule-database.php' );
 
+		ClubReady_Schedule_Database::create_tables();
+
+		if ( ! wp_next_scheduled( 'clubready_schedule_cron_hook' ) ) {
+			wp_schedule_event( time(), 'fifteen_minutes', 'clubready_schedule_cron_hook' );
+		}
 	}
 
 }

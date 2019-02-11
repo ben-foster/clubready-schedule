@@ -109,6 +109,12 @@ class ClubReady_Schedule_Admin {
 	public function admin_settings() {
 		$file = plugin_dir_path( __FILE__ ) . 'partials/clubready-schedule-admin-api-settings.php';
 
+		echo '<pre>'; print_r( _get_cron_array() ); echo '</pre>';
+		// echo $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
+
+		global $wpdb;
+		$table_name = 'wp_clubready_schedule_locations';
+
 		if( file_exists($file) ){
 			require_once( $file );
 		}
