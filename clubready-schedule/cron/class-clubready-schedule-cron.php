@@ -51,11 +51,13 @@ class ClubReady_Schedule_Cron {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . "database/class-clubready-schedule-database.php";
+
 	}
 
 	public function add_cron_intervals( $schedules ) {
 		$schedules['fifteen_minutes'] = array(
-			'interval' => 900,
+			'interval' => 10,
 			'display'  => esc_html__( 'Every Fifteen Minutes' ),
 		);
 
@@ -75,7 +77,25 @@ class ClubReady_Schedule_Cron {
 		$location_arr = json_decode( $result, true );
 
 		foreach ( $location_arr as $location ){
-			// error_log ( implode( "|", $location ) );
+
+			ClubReady_Schedule_Database::update_location(
+				$store_id = $location["Id"],
+				$name = $location["Name"],
+				$district_id = $location["DistrictId"],
+				$division_id = $location["DivisionId"],
+				$club_type = $location["ClubType"],
+				$credit_balance = $location["CreditBalance"],
+				$time_offset = $location["TimeOffset"],
+				$chain_id = $location["ChainId"],
+				$address_street_name = $location["Address"]["Street"],
+				$address_city = $location["Address"]["City"],
+				$address_state_prov = $location["Address"]["StateProv"],
+				$address_postal_code = $location["Address"]["PostalCode"],
+				$phone = $location["Phone"],
+				$email = $location["Email"],
+				$location_name = $location["LocationName"]
+			);
+			
 		}
 	}
 

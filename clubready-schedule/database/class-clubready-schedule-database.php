@@ -83,7 +83,7 @@ class ClubReady_Schedule_Database {
 			address_postal_code varchar(10) NOT NULL,
 			phone varchar(100) NOT NULL,
 			email varchar(100) NOT NULL,
-			location_name  varchar(100) NOT NULL,
+			location_name varchar(100) NOT NULL,
 			PRIMARY KEY  (id)
 		) $charset_collate;";
 
@@ -111,29 +111,68 @@ class ClubReady_Schedule_Database {
 		$email,
 		$location_name
 	) {
+		global $wpdb;
+		
 		$table_name = $wpdb->prefix . 'clubready_schedule_locations';
 
-		$wpdb->insert(
-			$table_name,
-			array(
-				'last_updated' => current_time( 'mysql' ),
-				'store_id' => $store_id,
-				'name' => $name,
-				'district_id' => $district_id,
-				'division_id' => $division_id,
-				'club_type' => $club_type,
-				'credit_balance' => $credit_balance,
-				'time_offset' => $time_offset,
-				'chain_id' => $chain_id,
-				'address_street_name' => $address_street_name,
-				'address_city' => $address_city,
-				'address_state_prov' => $address_state_prov,
-				'address_postal_code' => $address_postal_code,
-				'phone' => $phone,
-				'email' => $email,
-				'location_id' => $location_id,
-			)
+		$existing_records = $wpdb->get_results( 
+			"
+			SELECT * 
+			FROM $table_name
+			WHERE store_id = $store_id
+			"
 		);
+
+		$record_exists = count( $existing_records ) > 0;
+
+		if ( $record_exists ){
+			//do here
+			$wpdb->update(
+				$table_name,
+				array(
+					'last_updated' => current_time( 'mysql' ),
+					'store_id' => $store_id,
+					'name' => $name,
+					'district_id' => $district_id,
+					'division_id' => $division_id,
+					'club_type' => $club_type,
+					'credit_balance' => $credit_balance,
+					'time_offset' => $time_offset,
+					'chain_id' => $chain_id,
+					'address_street_name' => $address_street_name,
+					'address_city' => $address_city,
+					'address_state_prov' => $address_state_prov,
+					'address_postal_code' => $address_postal_code,
+					'phone' => $phone,
+					'email' => $email,
+					'location_name' => $location_name,
+				),
+				array( 'store_id' => $store_id )
+			);
+		
+		} else {
+			$wpdb->insert(
+				$table_name,
+				array(
+					'last_updated' => current_time( 'mysql' ),
+					'store_id' => $store_id,
+					'name' => $name,
+					'district_id' => $district_id,
+					'division_id' => $division_id,
+					'club_type' => $club_type,
+					'credit_balance' => $credit_balance,
+					'time_offset' => $time_offset,
+					'chain_id' => $chain_id,
+					'address_street_name' => $address_street_name,
+					'address_city' => $address_city,
+					'address_state_prov' => $address_state_prov,
+					'address_postal_code' => $address_postal_code,
+					'phone' => $phone,
+					'email' => $email,
+					'location_name' => $location_name,
+				)
+			);
+		}	
 	}
 
 }
