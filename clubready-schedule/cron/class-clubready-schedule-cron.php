@@ -51,13 +51,13 @@ class ClubReady_Schedule_Cron {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . "database/class-clubready-schedule-database.php";
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . "database/class-clubready-schedule-clubs-table.php";
 
 	}
 
 	public function add_cron_intervals( $schedules ) {
 		$schedules['fifteen_minutes'] = array(
-			'interval' => 10,
+			'interval' => 900,
 			'display'  => esc_html__( 'Every Fifteen Minutes' ),
 		);
 
@@ -65,37 +65,19 @@ class ClubReady_Schedule_Cron {
 	}
 
 	public function cron_tasks() {
-		self::update_locations();
+		self::update_clubs();
 	}
 
-	// TODO: refactor to somewhere else because this function could be manually called if the user wanted to manually update
-	private static function update_locations() {
-		$get_locations_url = "https://www.clubready.com/api/current/corp/" . get_option( 'chain_id' ) . "/clubs?ApiKey=" . get_option( 'api_key' );
+	// TODO: refactor to Club Cron class
+	private static function update_clubs() {
+		$get_clubs_url = "https://www.clubready.com/api/current/corp/" . get_option( 'chain_id' ) . "/clubs?ApiKey=" . get_option( 'api_key' );
 
-		$result = self::curl( $get_locations_url );
+		$result = self::curl( $get_clubs_url );
 
-		$location_arr = json_decode( $result, true );
+		$clubs= json_decode( $result, true );
 
-		foreach ( $location_arr as $location ){
-
-			ClubReady_Schedule_Database::update_location(
-				$store_id = $location["Id"],
-				$name = $location["Name"],
-				$district_id = $location["DistrictId"],
-				$division_id = $location["DivisionId"],
-				$club_type = $location["ClubType"],
-				$credit_balance = $location["CreditBalance"],
-				$time_offset = $location["TimeOffset"],
-				$chain_id = $location["ChainId"],
-				$address_street_name = $location["Address"]["Street"],
-				$address_city = $location["Address"]["City"],
-				$address_state_prov = $location["Address"]["StateProv"],
-				$address_postal_code = $location["Address"]["PostalCode"],
-				$phone = $location["Phone"],
-				$email = $location["Email"],
-				$location_name = $location["LocationName"]
-			);
-			
+		foreach ( $clubs as $club ){
+			ClubReady_Schedule_Clubs_Table::update( $club );
 		}
 	}
 

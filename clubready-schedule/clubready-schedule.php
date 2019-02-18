@@ -31,11 +31,22 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Currently plugin version.
+ * Current plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
  */
 define( 'CLUBREADY_SCHEDULE_VERSION', '1.0.0' );
+
+/**
+ * Current plugin database version.
+ * Start at version 1.0.0 and use SemVer - https://semver.org
+ */
+define( 'CLUBREADY_SCHEDULE_DATABASE_VERSION', '1.0.0' );
+
+/**
+ * Plugin database table prefix.
+ * Start at version 1.0.0 and use SemVer - https://semver.org
+ */
+define( 'CLUBREADY_SCHEDULE_DATABASE_TABLE_PREFIX', 'clubready_schedule_' );
 
 /**
  * The code that runs during plugin activation.

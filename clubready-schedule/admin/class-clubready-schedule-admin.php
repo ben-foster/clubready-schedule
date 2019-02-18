@@ -110,7 +110,7 @@ class ClubReady_Schedule_Admin {
 		$file = plugin_dir_path(  __FILE__ ) . 'partials/clubready-schedule-admin-api-settings.php';
 
 		// global $wpdb;
-		// $table_name = 'wp_clubready_schedule_locations';
+		// $table_name = 'wp_clubready_schedule_clubs';
 
 		// $existing_records = $wpdb->get_results( 
 		// 	"
@@ -119,11 +119,11 @@ class ClubReady_Schedule_Admin {
 		// 	"
 		// );
 
+		// print_r( $existing_records );
+
 		// echo '<pre>'; print_r( _get_cron_array() ); echo '</pre>';
 		// echo $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
 		// echo do_shortcode( '[clubready_schedule]' );
-
-		// print_r( $existing_records );
 
 		if( file_exists($file) ){
 			require_once( $file );
